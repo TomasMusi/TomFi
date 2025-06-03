@@ -77,7 +77,7 @@ This project taught me a lot about:
 - [x] QR code support
 - [ ] 2FA Authentication
 - [ ] Transaction history & charts
-- [ ] Desktop App (Electron)
+- [ ] Desktop App (C++)
 - [ ] Internationalization (i18n)
 
 ---
