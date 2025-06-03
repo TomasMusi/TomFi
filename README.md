@@ -9,7 +9,7 @@ Built using modern technologies like **SvelteKit**, **TypeScript**, **MariaDB**,
 
 ## 🚀 About the Project
 
-TomFi is not just a banking demo — it's a reflection of my personal growth as a developer.  
+TomFi is a demo banking web application that opened doors to new opportunities and played a key role in my personal growth as a developer.
 Throughout this project, I've explored:
 
 - 🔁 **SvelteKit** for reactive, frontend development
