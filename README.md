@@ -37,7 +37,7 @@ Throughout this project, I've explored:
 
 ---
 
-![TomFi Features](![Screenshot from 2025-06-03 17-16-58](https://github.com/user-attachments/assets/f02b7a88-80ef-4153-92d3-156806c3e5a0))
+(![Screenshot from 2025-06-03 17-16-58](https://github.com/user-attachments/assets/f02b7a88-80ef-4153-92d3-156806c3e5a0))
 
 ## 🧪 Tech Stack
 
@@ -56,7 +56,7 @@ Throughout this project, I've explored:
 
 ---
 
-![TomFi Dashboard](![Screenshot from 2025-06-03 17-16-21](https://github.com/user-attachments/assets/bbef87e0-4f0f-4a33-8c47-212b1ed2908c))
+(![Screenshot from 2025-06-03 17-16-21](https://github.com/user-attachments/assets/bbef87e0-4f0f-4a33-8c47-212b1ed2908c))
 
 ## 📚 What I Learned
 
