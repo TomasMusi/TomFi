@@ -5,7 +5,7 @@ Built using modern technologies like **SvelteKit**, **TypeScript**, **MariaDB**,
 
 ---
 
-(![Screenshot from 2025-06-03 17-17-39](https://github.com/user-attachments/assets/170f06c6-dc45-41bc-afaa-b8ad82137f66))
+![Screenshot from 2025-06-03 17-17-39](https://github.com/user-attachments/assets/170f06c6-dc45-41bc-afaa-b8ad82137f66))
 
 ## 🚀 About the Project
 
