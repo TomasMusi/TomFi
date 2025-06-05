@@ -10,6 +10,12 @@
 			user_profile_picture: string;
 		};
 		decoded: any;
+		card: {
+			card_number: string;
+			balance: string;
+			pin_hash: string;
+			is_active: number;
+		};
 	};
 
 	let isOpen = false;

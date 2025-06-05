@@ -37,13 +37,21 @@ export async function middlewareAuth(request: Request) {
             .where('id', '=', decoded.id)
             .executeTakeFirst();
 
+        const card = await db
+            .selectFrom("Credit_card")
+            .select(['card_number', 'balance', 'pin_hash', 'is_active'])
+            .where('user_id', '=', decoded.id)
+            .executeTakeFirst();
+
         if (!user) {
             throw redirect(302, "/");
         }
 
+
         return {
             decoded,
-            user
+            user,
+            card
         };
 
 

@@ -10,6 +10,12 @@
 			user_profile_picture: string;
 		};
 		decoded: any;
+		card: {
+			card_number: string;
+			balance: string;
+			pin_hash: string;
+			is_active: number;
+		};
 	};
 
 	let isOpen = false;
@@ -138,7 +144,7 @@
 										<a href="/dashboard/mail" class="block px-4 py-2 hover:bg-blue-50">Mail</a>
 									</li>
 									<li>
-										<a href="#" class="block px-4 py-2 text-red-600" onclick={Logout}>Logout</a>
+										<button class="block px-4 py-2 text-red-600" onclick={Logout}>Logout</button>
 									</li>
 								</ul>
 							</div>

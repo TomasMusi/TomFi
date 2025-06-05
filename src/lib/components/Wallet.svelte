@@ -10,6 +10,12 @@
 			user_profile_picture: string;
 		};
 		decoded: any;
+		card: {
+			card_number: string;
+			balance: string;
+			pin_hash: string;
+			is_active: number;
+		};
 	};
 
 	let isOpen = false;
@@ -149,11 +155,11 @@
 				class="mx-auto w-full max-w-7xl space-y-4 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 p-6 text-white shadow-lg"
 			>
 				<!-- Balance -->
-				<div class="text-3xl font-semibold">$21,255</div>
+				<div class="text-3xl font-semibold">${data.card.balance}</div>
 
 				<!-- Card Details -->
 				<div class="flex flex-col text-lg tracking-widest md:flex-row md:justify-between">
-					<div>6574 **** **** 7657</div>
+					<div>{data.card.card_number}</div>
 					<div class="mt-2 flex gap-8 text-sm text-gray-200 md:mt-0">
 						<div>
 							<p>EXPIRES</p>

@@ -10,6 +10,12 @@
 			user_profile_picture: string;
 		};
 		decoded: any;
+		card: {
+			card_number: string;
+			balance: string;
+			pin_hash: string;
+			is_active: number;
+		};
 	};
 
 	let isOpen = false;
@@ -166,9 +172,9 @@
 				>
 					<div>
 						<div class="flex items-start justify-between">
-							<h2 class="text-2xl font-bold">$21,255</h2>
+							<h2 class="text-2xl font-bold">${data.card.balance}</h2>
 						</div>
-						<div class="mt-6 font-mono text-lg tracking-widest">6574 **** **** 7657</div>
+						<div class="mt-6 font-mono text-lg tracking-widest">{data.card.card_number}</div>
 						<div class="mt-4 flex justify-between text-sm">
 							<div>
 								<p class="text-xs">EXPIRES</p>
