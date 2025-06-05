@@ -30,6 +30,51 @@
 		isSidebarOpen = !isSidebarOpen;
 	}
 
+	async function CheckPin() {
+		let passValue: string;
+		//
+		Swal.fire({
+			title: 'Enter Your Password to see Your Pin',
+			input: 'password',
+			inputAttributes: {
+				autocapitalize: 'off'
+			},
+			showCancelButton: true,
+			confirmButtonText: 'Enter',
+			showLoaderOnConfirm: true,
+			preConfirm: async (password: string) => {
+				try {
+					const response = await fetch('/api/SeePin', {
+						method: 'POST',
+						body: JSON.stringify(password),
+						headers: {
+							'content-type': 'application/json'
+						}
+					});
+					if (!response.ok) {
+						return Swal.showValidationMessage(`
+          ${JSON.stringify(await response.json())}
+        `);
+					}
+					return response.json();
+				} catch (error) {
+					Swal.showValidationMessage(`
+        Failed: ${error}
+      `);
+				}
+			},
+			allowOutsideClick: () => !Swal.isLoading()
+		}).then((result) => {
+			if (result.isConfirmed) {
+				Swal.fire({
+					title: `${result.value.login}'s avatar`,
+					imageUrl: result.value.avatar_url
+				});
+			}
+		});
+		//
+	}
+
 	function Logout() {
 		goto('/api/logout');
 	}
@@ -39,6 +84,7 @@
 	}
 
 	import { onMount, onDestroy } from 'svelte';
+	import Swal from 'sweetalert2';
 
 	onMount(() => {
 		if (browser) {
@@ -230,7 +276,7 @@
 							d="M15 12h2m-6 4h6m2 0a2 2 0 002-2V8a2 2 0 00-2-2h-1.5"
 						/>
 					</svg>
-					<span class="text-sm font-medium text-gray-700">Show PIN</span>
+					<span onclick={CheckPin} class="text-sm font-medium text-gray-700">Show PIN</span>
 				</button>
 
 				<!-- Deposit -->

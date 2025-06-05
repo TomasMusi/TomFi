@@ -24,3 +24,10 @@ export const TokenSchema = z.object({
 
 export type tokenSchemaType = z.infer<typeof TokenSchema>;
 
+
+export const SeePinSchema = z.object({
+    password: z.string().min(5, "Password must be atleast 5 characters long")
+})
+
+export type SeePinSchemaType = z.infer<typeof SeePinSchema>;
+
