@@ -56,7 +56,7 @@ const numberstr = numbers.toString();
 
 // Getting Keys
 
-const privateKeys = fs.readFileSync(path.resolve('keys/private.pem'), 'utf-8');
+/* const privateKeys = fs.readFileSync(path.resolve('keys/private.pem'), 'utf-8'); */
 
 const publicKey = fs.readFileSync(path.resolve("keys/public.pem"), 'utf-8');
 
@@ -64,11 +64,11 @@ const publicKey = fs.readFileSync(path.resolve("keys/public.pem"), 'utf-8');
 // Encrypt PIN with public key  
 const encrypted = publicEncrypt(publicKey, Buffer.from(PIN));
 const encryptedBase64 = encrypted.toString('base64');
-console.log(`Encrypted With Base 64 ${encryptedBase64}`);
+/* console.log(`Encrypted With Base 64 ${encryptedBase64}`); */
 
-
+/* 
 const decrypted = privateDecrypt(privateKeys, Buffer.from(encryptedBase64, 'base64'));
-console.log('Decrypted PIN:', decrypted.toString());
+console.log('Decrypted PIN:', decrypted.toString()); */
 
 
 
@@ -101,9 +101,7 @@ export const POST: RequestHandler = async ({ request }) => {
     const hash = bcrypt.hashSync(password, parseInt(BCRYPT_ROUNDS));
 
 
-    const trx = await db.startTransaction().execute();
-
-    try {
+    await db.transaction().execute(async (trx) => {
         const userResult = await trx.insertInto('Users').values({
             Name: name,
             password: hash,
@@ -114,8 +112,9 @@ export const POST: RequestHandler = async ({ request }) => {
             created_at: new Date(),
             user_profile_picture: "/pfp/default.jpeg",
         }).executeTakeFirstOrThrow();
+        console.log(`Before CreateCard ${Number(userResult.insertId)}`);
 
-        let CreateCard = await trx.insertInto("Credit_card").values({
+        const CreateCard = await trx.insertInto("Credit_card").values({
             balance: "1000",
             card_number: numberstr,
             user_id: Number(userResult.insertId),
@@ -123,10 +122,13 @@ export const POST: RequestHandler = async ({ request }) => {
             pin_hash: encryptedBase64,
             created_at: new Date(),
         }).execute();
-    }
-    catch (err) {
-        console.error(`chyba jest zde ${err}`);
-    }
+
+        console.log(`After CreateCard ${Number(userResult.insertId)}`);
+
+
+    });
+
+
 
 
 
