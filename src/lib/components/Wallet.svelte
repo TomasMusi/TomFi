@@ -2,6 +2,59 @@
 	import { browser } from '$app/environment';
 	import { goto } from '$app/navigation';
 
+	// Show Pin Function.
+
+	let showModal = false;
+	let showPinModal = false;
+	let password = '';
+	let decryptedPin: string | null = null;
+
+	let showErrorModal = false;
+	let errorMessage: string | null = null;
+
+	function closeErrorModal() {
+		showErrorModal = false;
+		errorMessage = null;
+	}
+
+	function openModal() {
+		showModal = true;
+	}
+
+	function closeModal() {
+		showModal = false;
+		password = '';
+	}
+
+	function closePinModal() {
+		showPinModal = false;
+		decryptedPin = null;
+	}
+
+	async function submitPassword() {
+		const response = await fetch('/api/SeePin', {
+			method: 'POST',
+			body: JSON.stringify({ password }),
+			headers: {
+				'content-type': 'application/json'
+			}
+		});
+
+		const result = await response.json();
+
+		if (response.ok) {
+			decryptedPin = result.pin;
+			closeModal(); // close password modal
+			showPinModal = true; // open pin modal
+		} else {
+			errorMessage = result.error || 'Unknown error occurred.';
+			closeModal(); // close password modal
+			showErrorModal = true; // show error modal
+		}
+	}
+
+	// Data From DB.
+
 	export let data: {
 		user: {
 			id: number;
@@ -28,51 +81,6 @@
 
 	function toggleSidebar() {
 		isSidebarOpen = !isSidebarOpen;
-	}
-
-	async function CheckPin() {
-		let passValue: string;
-		//
-		Swal.fire({
-			title: 'Enter Your Password to see Your Pin',
-			input: 'password',
-			inputAttributes: {
-				autocapitalize: 'off'
-			},
-			showCancelButton: true,
-			confirmButtonText: 'Enter',
-			showLoaderOnConfirm: true,
-			preConfirm: async (password: string) => {
-				try {
-					const response = await fetch('/api/SeePin', {
-						method: 'POST',
-						body: JSON.stringify(password),
-						headers: {
-							'content-type': 'application/json'
-						}
-					});
-					if (!response.ok) {
-						return Swal.showValidationMessage(`
-          ${JSON.stringify(await response.json())}
-        `);
-					}
-					return response.json();
-				} catch (error) {
-					Swal.showValidationMessage(`
-        Failed: ${error}
-      `);
-				}
-			},
-			allowOutsideClick: () => !Swal.isLoading()
-		}).then((result) => {
-			if (result.isConfirmed) {
-				Swal.fire({
-					title: `${result.value.login}'s avatar`,
-					imageUrl: result.value.avatar_url
-				});
-			}
-		});
-		//
 	}
 
 	function Logout() {
@@ -260,6 +268,7 @@
 
 				<!-- Show PIN -->
 				<button
+					onclick={openModal}
 					class="flex flex-col items-center justify-center rounded-lg bg-white p-4 shadow hover:bg-gray-100"
 				>
 					<svg
@@ -276,7 +285,7 @@
 							d="M15 12h2m-6 4h6m2 0a2 2 0 002-2V8a2 2 0 00-2-2h-1.5"
 						/>
 					</svg>
-					<span onclick={CheckPin} class="text-sm font-medium text-gray-700">Show PIN</span>
+					<span class="text-sm font-medium text-gray-700">Show PIN</span>
 				</button>
 
 				<!-- Deposit -->
@@ -366,3 +375,172 @@
 		</main>
 	</div>
 </div>
+
+<!-- If statements for PIN. -->
+{#if showModal}
+	<div
+		class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm transition-opacity"
+		onclick={closeModal}
+	>
+		<!-- Modal container -->
+		<div
+			onclick={(event) => event.stopPropagation()}
+			class="relative w-[90%] max-w-lg rounded-3xl bg-white p-8 shadow-2xl ring-1 ring-gray-200 transition-all sm:p-10"
+		>
+			<!-- Close icon -->
+			<button
+				onclick={closeModal}
+				class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 focus:outline-none"
+				aria-label="Close modal"
+			>
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					class="h-5 w-5"
+					fill="none"
+					viewBox="0 0 24 24"
+					stroke="currentColor"
+				>
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"
+						d="M6 18L18 6M6 6l12 12"
+					/>
+				</svg>
+			</button>
+
+			<!-- Title -->
+			<h2 class="mb-2 text-center text-2xl font-bold text-gray-800 sm:text-3xl">
+				🔐 Secure Access
+			</h2>
+			<p class="mb-6 text-center text-sm text-gray-500">Enter your password to reveal your PIN</p>
+
+			<!-- Password input -->
+			<input
+				type="password"
+				bind:value={password}
+				placeholder="Your password"
+				class="w-full rounded-xl border border-gray-300 px-5 py-3 text-sm text-gray-700 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 focus:outline-none"
+			/>
+
+			<!-- Action buttons -->
+			<div class="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
+				<button
+					onclick={submitPassword}
+					class="w-full rounded-xl bg-blue-600 px-6 py-3 text-white shadow-md transition-all duration-200 hover:bg-blue-700 sm:w-auto"
+				>
+					Reveal PIN
+				</button>
+				<button
+					onclick={closeModal}
+					class="w-full rounded-xl bg-gray-300 px-6 py-3 text-gray-800 transition-all hover:bg-gray-400 sm:w-auto"
+				>
+					Cancel
+				</button>
+			</div>
+		</div>
+	</div>
+{/if}
+{#if showPinModal}
+	<div
+		class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm transition-opacity"
+		onclick={closePinModal}
+	>
+		<div
+			onclick={(event) => event.stopPropagation()}
+			class="relative w-[90%] max-w-lg rounded-3xl bg-white p-8 shadow-2xl ring-1 ring-gray-200 transition-all sm:p-10"
+		>
+			<!-- Close icon -->
+			<button
+				onclick={closePinModal}
+				class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 focus:outline-none"
+				aria-label="Close modal"
+			>
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					class="h-5 w-5"
+					fill="none"
+					viewBox="0 0 24 24"
+					stroke="currentColor"
+				>
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"
+						d="M6 18L18 6M6 6l12 12"
+					/>
+				</svg>
+			</button>
+
+			<!-- Title -->
+			<h2 class="mb-2 text-center text-2xl font-bold text-gray-800 sm:text-3xl">🎉 Your PIN</h2>
+			<p class="mb-6 text-center text-sm text-gray-500">Keep it private, don't share it</p>
+
+			<!-- PIN display -->
+			<div class="mb-4 flex justify-center">
+				<span
+					class="rounded-xl bg-gray-100 px-6 py-3 font-mono text-2xl tracking-widest text-gray-800 shadow-inner"
+				>
+					{decryptedPin}
+				</span>
+			</div>
+
+			<!-- Close button -->
+			<div class="mt-6 flex justify-center">
+				<button
+					onclick={closePinModal}
+					class="rounded-xl bg-blue-600 px-6 py-3 text-white transition-all hover:bg-blue-700"
+				>
+					Close
+				</button>
+			</div>
+		</div>
+	</div>
+{/if}
+{#if showErrorModal}
+	<div
+		class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm transition-opacity"
+		onclick={closeErrorModal}
+	>
+		<div
+			onclick={(event) => event.stopPropagation()}
+			class="relative w-[90%] max-w-md rounded-3xl bg-white p-8 shadow-2xl ring-1 ring-gray-200 transition-all sm:p-10"
+		>
+			<!-- Close icon -->
+			<button
+				onclick={closeErrorModal}
+				class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 focus:outline-none"
+				aria-label="Close modal"
+			>
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					class="h-5 w-5"
+					fill="none"
+					viewBox="0 0 24 24"
+					stroke="currentColor"
+				>
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"
+						d="M6 18L18 6M6 6l12 12"
+					/>
+				</svg>
+			</button>
+
+			<!-- Title -->
+			<h2 class="mb-2 text-center text-2xl font-bold text-red-600 sm:text-3xl">❌ Access Denied</h2>
+			<p class="mb-6 text-center text-sm text-gray-500">{errorMessage}</p>
+
+			<!-- Close button -->
+			<div class="flex justify-center">
+				<button
+					onclick={closeErrorModal}
+					class="rounded-xl bg-red-600 px-6 py-3 text-white transition-all hover:bg-red-700"
+				>
+					Close
+				</button>
+			</div>
+		</div>
+	</div>
+{/if}

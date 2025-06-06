@@ -93,6 +93,7 @@ export const POST: RequestHandler = async ({ request }) => {
 
     const decrypted = privateDecrypt(privateKey, Buffer.from(getPin.pin_hash, 'base64'));
     console.log('Decrypted PIN:', decrypted.toString());
+    const decryptedString = decrypted.toString();
 
 
 
@@ -102,7 +103,7 @@ export const POST: RequestHandler = async ({ request }) => {
 
 
     // Sucess Response.
-    return new Response(JSON.stringify({ success: true }), {
+    return new Response(JSON.stringify({ success: true, pin: decryptedString }), {
         status: 200,
         headers: { 'Content-Type': 'application/json' }
     });
