@@ -2,6 +2,48 @@
 	import { browser } from '$app/environment';
 	import { goto } from '$app/navigation';
 
+	// Show QR Code Function
+
+	let showQRPrompt = false;
+	let showQRImage = false;
+	let qrImageUrl: string | null = null;
+
+	let showErrorModalQR = false;
+	let errorMessageQR: string | null = null;
+
+	function closeErrorModalQR() {
+		showErrorModalQR = false;
+		errorMessageQR = null;
+	}
+
+	function openQRPrompt() {
+		showQRPrompt = true;
+	}
+
+	function closeQRPrompt() {
+		showQRPrompt = false;
+	}
+
+	function closeQRImageModal() {
+		showQRImage = false;
+		qrImageUrl = null;
+	}
+
+	async function confirmGenerateQR() {
+		closeQRPrompt();
+
+		const response = await fetch('/api/qrcode');
+		const result = await response.json();
+
+		if (response.ok && result.qrCode) {
+			qrImageUrl = result.qrCode;
+			showQRImage = true;
+		} else {
+			errorMessageQR = 'Failed to generate QR code.';
+			showErrorModalQR = true;
+		}
+	}
+
 	// Show Pin Function.
 
 	let showModal = false;
@@ -353,6 +395,7 @@
 
 				<!-- QR Code -->
 				<button
+					onclick={openQRPrompt}
 					class="flex flex-col items-center justify-center rounded-lg bg-white p-4 shadow hover:bg-gray-100"
 				>
 					<svg
@@ -537,6 +580,155 @@
 				<button
 					onclick={closeErrorModal}
 					class="rounded-xl bg-red-600 px-6 py-3 text-white transition-all hover:bg-red-700"
+				>
+					Close
+				</button>
+			</div>
+		</div>
+	</div>
+{/if}
+<!-- Prompt Modal: Ask Yes/No -->
+{#if showQRPrompt}
+	<div
+		class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm"
+		onclick={closeQRPrompt}
+	>
+		<div
+			onclick={(e) => e.stopPropagation()}
+			class="relative w-[90%] max-w-md rounded-3xl bg-white p-8 shadow-2xl ring-1 ring-gray-200 sm:p-10"
+		>
+			<!-- Close icon -->
+			<button
+				onclick={closeQRPrompt}
+				class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 focus:outline-none"
+				aria-label="Close modal"
+			>
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					class="h-5 w-5"
+					fill="none"
+					viewBox="0 0 24 24"
+					stroke="currentColor"
+				>
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"
+						d="M6 18L18 6M6 6l12 12"
+					/>
+				</svg>
+			</button>
+
+			<h2 class="mb-4 text-center text-xl font-semibold text-gray-800">Generate QR Code?</h2>
+			<p class="mb-6 text-center text-gray-500">Do you want to generate a QR code now?</p>
+
+			<div class="flex justify-center gap-4">
+				<button
+					onclick={confirmGenerateQR}
+					class="rounded-xl bg-blue-600 px-6 py-3 text-white transition"
+				>
+					Yes
+				</button>
+				<button
+					onclick={closeQRPrompt}
+					class="rounded-xl bg-gray-300 px-6 py-3 text-gray-800 transition hover:bg-gray-400"
+				>
+					No
+				</button>
+			</div>
+		</div>
+	</div>
+{/if}
+
+<!-- QR Image Modal -->
+{#if showQRImage}
+	<div
+		class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm"
+		onclick={closeQRImageModal}
+	>
+		<div
+			onclick={(e) => e.stopPropagation()}
+			class="relative w-[90%] max-w-md rounded-3xl bg-white p-8 shadow-2xl ring-1 ring-gray-200 sm:p-10"
+		>
+			<!-- Close icon -->
+			<button
+				onclick={closeQRImageModal}
+				class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 focus:outline-none"
+				aria-label="Close modal"
+			>
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					class="h-5 w-5"
+					fill="none"
+					viewBox="0 0 24 24"
+					stroke="currentColor"
+				>
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"
+						d="M6 18L18 6M6 6l12 12"
+					/>
+				</svg>
+			</button>
+
+			<h2 class="mb-4 text-center text-xl font-semibold text-gray-800">📷 Your QR Code</h2>
+
+			{#if qrImageUrl}
+				<img src={qrImageUrl} alt="QR Code" class="mx-auto max-w-xs" />
+			{:else}
+				<p class="text-center text-gray-500">Loading...</p>
+			{/if}
+
+			<div class="mt-6 flex justify-center">
+				<button
+					onclick={closeQRImageModal}
+					class="rounded-xl bg-blue-600 px-6 py-3 text-white transition hover:bg-blue-700"
+				>
+					Close
+				</button>
+			</div>
+		</div>
+	</div>
+{/if}
+{#if showErrorModalQR}
+	<div
+		class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm"
+		onclick={closeErrorModalQR}
+	>
+		<div
+			onclick={(e) => e.stopPropagation()}
+			class="relative w-[90%] max-w-md rounded-3xl bg-white p-8 shadow-2xl ring-1 ring-red-300 sm:p-10"
+		>
+			<!-- Close icon -->
+			<button
+				onclick={closeErrorModalQR}
+				class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 focus:outline-none"
+				aria-label="Close modal"
+			>
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					class="h-5 w-5"
+					fill="none"
+					viewBox="0 0 24 24"
+					stroke="currentColor"
+				>
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"
+						d="M6 18L18 6M6 6l12 12"
+					/>
+				</svg>
+			</button>
+
+			<h2 class="mb-4 text-center text-xl font-semibold text-red-600">❌ Error</h2>
+			<p class="mb-6 text-center text-gray-700">{errorMessageQR}</p>
+
+			<div class="flex justify-center">
+				<button
+					onclick={closeErrorModalQR}
+					class="rounded-xl bg-red-600 px-6 py-3 text-white transition hover:bg-red-700"
 				>
 					Close
 				</button>
