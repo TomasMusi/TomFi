@@ -1,13 +1,11 @@
 import { registerSchema, type registerSchemaType } from '$lib/zodtypes';
-import { error, type RequestHandler } from '@sveltejs/kit';
+import { type RequestHandler } from '@sveltejs/kit';
 import { db } from '../../../types/db';
 import bcrypt from 'bcrypt'
 import { BCRYPT_ROUNDS } from '$env/static/private';
 import * as fs from 'fs'
-import type { InsertResult } from 'kysely';
-import { privateDecrypt, publicEncrypt } from 'crypto';
+import { publicEncrypt } from 'crypto';
 import path from 'path';
-
 
 // Generating random Numbers
 function generateFormattedNumber(): string {
@@ -30,8 +28,6 @@ function generateMultipleFormattedNumbers(count: number): string[] {
 
 // Example usage:
 const numbers = generateMultipleFormattedNumbers(1);
-
-
 const CheckCardNumber = await db.selectFrom("Credit_card").select("Credit_card.card_number").where("Credit_card.card_number", "=", numbers).execute();
 
 if (CheckCardNumber.length > 0) {
@@ -56,21 +52,11 @@ const numberstr = numbers.toString();
 
 // Getting Keys
 
-/* const privateKeys = fs.readFileSync(path.resolve('keys/private.pem'), 'utf-8'); */
-
 const publicKey = fs.readFileSync(path.resolve("keys/public.pem"), 'utf-8');
-
 
 // Encrypt PIN with public key  
 const encrypted = publicEncrypt(publicKey, Buffer.from(PIN));
 const encryptedBase64 = encrypted.toString('base64');
-/* console.log(`Encrypted With Base 64 ${encryptedBase64}`); */
-
-/* 
-const decrypted = privateDecrypt(privateKeys, Buffer.from(encryptedBase64, 'base64'));
-console.log('Decrypted PIN:', decrypted.toString()); */
-
-
 
 export const POST: RequestHandler = async ({ request }) => {
     const data = await request.json();
@@ -100,7 +86,6 @@ export const POST: RequestHandler = async ({ request }) => {
 
     const hash = bcrypt.hashSync(password, parseInt(BCRYPT_ROUNDS));
 
-
     await db.transaction().execute(async (trx) => {
         const userResult = await trx.insertInto('Users').values({
             Name: name,
@@ -112,9 +97,8 @@ export const POST: RequestHandler = async ({ request }) => {
             created_at: new Date(),
             user_profile_picture: "/pfp/default.jpeg",
         }).executeTakeFirstOrThrow();
-        console.log(`Before CreateCard ${Number(userResult.insertId)}`);
 
-        const CreateCard = await trx.insertInto("Credit_card").values({
+        await trx.insertInto("Credit_card").values({
             balance: "1000",
             card_number: numberstr,
             user_id: Number(userResult.insertId),
@@ -122,16 +106,7 @@ export const POST: RequestHandler = async ({ request }) => {
             pin_hash: encryptedBase64,
             created_at: new Date(),
         }).execute();
-
-        console.log(`After CreateCard ${Number(userResult.insertId)}`);
-
-
     });
-
-
-
-
-
 
     // Sucess Response.
     return new Response(JSON.stringify({ success: true }), {

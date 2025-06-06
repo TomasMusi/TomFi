@@ -8,7 +8,6 @@ import { signJWT } from '../../../server/auth';
 export const POST: RequestHandler = async ({ request, cookies }) => {
     const data = await request.json();
 
-
     const parseResult = loginSchema.safeParse(data);
 
     if (!parseResult.success) {
@@ -17,8 +16,6 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
             { status: 400, headers: { 'Content-Type': 'application/json' } }
         );
     }
-
-
 
     const { email, password }: LoginSchemaType = parseResult.data;
 

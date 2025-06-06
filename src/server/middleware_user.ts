@@ -7,7 +7,6 @@ import { db } from '../types/db';
 
 // Export for function middlewareAuth to safe space, because it will be used many times.
 export async function middlewareAuth(request: Request) {
-
     // requesting the cookie.
     const cookieHeader = request.headers.get('cookie') || '';
     // parsing the cookie
@@ -46,15 +45,11 @@ export async function middlewareAuth(request: Request) {
         if (!user) {
             throw redirect(302, "/");
         }
-
-
         return {
             decoded,
             user,
             card
         };
-
-
     } catch (err) {
         throw redirect(302, '/');
     }

@@ -13,13 +13,10 @@ export const GET: RequestHandler = async ({ cookies }) => {
         });
     }
 
-
     // GET USER ID.
     const decoded = verifyJWT(data);
-
     const getCreditData = await db.selectFrom("Credit_card").select("card_number").where("user_id", "=", decoded.id).executeTakeFirst();
     const getNameData = await db.selectFrom("Users").select("Name").where("id", "=", decoded.id).executeTakeFirst();
-
 
     if (!getCreditData || !getNameData) {
         return new Response(JSON.stringify({ error: 'Couldnt get data from Database ' }), {
@@ -30,10 +27,7 @@ export const GET: RequestHandler = async ({ cookies }) => {
 
     const finalData = getNameData?.Name + "-" + getCreditData?.card_number.split(' ').join('-');
 
-    console.log(`Final data: ${finalData}`);
-
     const qrDataURL = await QRCode.toDataURL(finalData);
-
 
     return new Response(JSON.stringify({ success: true, qrCode: qrDataURL }), {
         status: 200,

@@ -133,8 +133,9 @@
 		isOpen = false;
 	}
 
+	const isActive = data.card.is_active === 1;
+
 	import { onMount, onDestroy } from 'svelte';
-	import Swal from 'sweetalert2';
 
 	onMount(() => {
 		if (browser) {
@@ -248,8 +249,25 @@
 			</div>
 
 			<div
-				class="mx-auto w-full max-w-7xl space-y-4 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 p-6 text-white shadow-lg"
+				class="relative mx-auto w-full max-w-7xl space-y-4 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 p-6 text-white shadow-lg"
 			>
+				<!-- Status Badge -->
+				<div class="absolute top-4 right-4">
+					{#if isActive}
+						<span
+							class="inline-flex items-center gap-1 rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-800"
+						>
+							✅ Active
+						</span>
+					{:else}
+						<span
+							class="inline-flex items-center gap-1 rounded-full bg-red-100 px-3 py-1 text-sm font-medium text-red-800"
+						>
+							❌ Deactivated
+						</span>
+					{/if}
+				</div>
+
 				<!-- Balance -->
 				<div class="text-3xl font-semibold">${data.card.balance}</div>
 
@@ -351,26 +369,49 @@
 					<span class="text-sm font-medium text-gray-700">Deposit</span>
 				</button>
 
-				<!-- Deactivate -->
-				<button
-					class="flex flex-col items-center justify-center rounded-lg bg-white p-4 shadow hover:bg-gray-100"
-				>
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						class="mb-1 h-6 w-6 text-red-600"
-						fill="none"
-						viewBox="0 0 24 24"
-						stroke="currentColor"
+				{#if isActive}
+					<!-- Deactivate Button -->
+					<button
+						class="flex flex-col items-center justify-center rounded-lg bg-white p-4 shadow hover:bg-gray-100"
 					>
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M6 18L18 6M6 6l12 12"
-						/>
-					</svg>
-					<span class="text-sm font-medium text-gray-700">Deactivate</span>
-				</button>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							class="mb-1 h-6 w-6 text-red-600"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke="currentColor"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M6 18L18 6M6 6l12 12"
+							/>
+						</svg>
+						<span class="text-sm font-medium text-gray-700">Deactivate</span>
+					</button>
+				{:else}
+					<!-- Activate Button -->
+					<button
+						class="flex flex-col items-center justify-center rounded-lg bg-white p-4 shadow hover:bg-gray-100"
+					>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							class="mb-1 h-6 w-6 text-green-600"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke="currentColor"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M5 13l4 4L19 7"
+							/>
+						</svg>
+						<span class="text-sm font-medium text-gray-700">Activate</span>
+					</button>
+				{/if}
 
 				<!-- Info -->
 				<button

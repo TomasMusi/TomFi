@@ -11,15 +11,11 @@ import { verifyJWT } from '../../../server/auth';
 const MAX_IMAGE_SIZE: number = 5 * 1024 * 1024;
 const ALLOWED_TYPES: string[] = ['image/png', 'image/jpg', 'image/webp', 'image/jpeg'];
 
-
-
 export const POST: RequestHandler = async ({ request }) => {
-
     // requesting the cookie.
     const cookieHeader = request.headers.get('cookie') || '';
     // parsing the cookie
     const cookies = parse(cookieHeader)
-
     // validating cookies throw zod
     const result = TokenSchema.safeParse(cookies);
 
@@ -33,13 +29,9 @@ export const POST: RequestHandler = async ({ request }) => {
 
     // saving result data into variable token
     const { token } = result.data;
-
     const decoded = verifyJWT(token);
-
     const formData = await request.formData();
-
     const image = formData.get("image") as File | null
-
 
     if (!image) {
         return new Response(
@@ -61,9 +53,6 @@ export const POST: RequestHandler = async ({ request }) => {
             { status: 400 }
         );
     }
-
-
-
 
     const CurrectUserImage = await db.selectFrom('Users')
         .select(['user_profile_picture'])
@@ -88,21 +77,17 @@ export const POST: RequestHandler = async ({ request }) => {
     // formate (special library that gives you time formatted)
     const formattedDate = format(now, 'yyyy-MM-dd_HH-mm');
 
-
     const Imagemime = image.type;
     const ImageFirstName = image.name;
     const imageCut = ImageFirstName.split(".")[0];
     const ext = Imagemime.split("/")[1];
     const ImageName = imageCut + "-" + formattedDate + "." + ext;
     const buffer = Buffer.from(await image.arrayBuffer());
-
-
     const filepath = path.resolve("static/pfp", ImageName)
 
     writeFile(filepath, buffer);
 
     const imageUrl = `/pfp/${ImageName}`
-
 
     const user = await db.updateTable('Users').set({ user_profile_picture: imageUrl }).where("id", "=", decoded.id).execute();
 
