@@ -95,6 +95,20 @@
 		}
 	}
 
+	// Set Card Status
+
+	async function SetCardStatus() {
+		console.log('Funguju');
+
+		const response = await fetch(`/api/setCardStatus`, {
+			method: 'GET'
+		});
+
+		if (response.ok) {
+			window.location.reload();
+		}
+	}
+
 	// Data From DB.
 
 	export let data: {
@@ -372,6 +386,7 @@
 				{#if isActive}
 					<!-- Deactivate Button -->
 					<button
+						onclick={SetCardStatus}
 						class="flex flex-col items-center justify-center rounded-lg bg-white p-4 shadow hover:bg-gray-100"
 					>
 						<svg
@@ -393,6 +408,7 @@
 				{:else}
 					<!-- Activate Button -->
 					<button
+						onclick={SetCardStatus}
 						class="flex flex-col items-center justify-center rounded-lg bg-white p-4 shadow hover:bg-gray-100"
 					>
 						<svg
