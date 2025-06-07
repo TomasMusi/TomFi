@@ -18,6 +18,8 @@
 		};
 	};
 
+	const isActive = data.card.is_active === 1;
+
 	let isOpen = false;
 	let isSidebarOpen = false;
 
@@ -168,31 +170,54 @@
 					</ul>
 				</div>
 				<div
-					class="flex flex-col justify-between rounded-xl bg-gradient-to-tr from-indigo-500 to-blue-500 p-6 text-white shadow-md"
+					class="relative mx-auto w-full max-w-7xl space-y-4 rounded-2xl bg-gradient-to-tr from-indigo-500 to-blue-500 p-6 text-white shadow-lg"
 				>
-					<div>
-						<div class="flex items-start justify-between">
-							<h2 class="text-2xl font-bold">${data.card.balance}</h2>
+					<!-- Status Badge -->
+					<div class="absolute top-4 right-4">
+						{#if isActive}
+							<span
+								class="inline-flex items-center gap-1 rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-800"
+							>
+								✅ Active
+							</span>
+						{:else}
+							<span
+								class="inline-flex items-center gap-1 rounded-full bg-red-100 px-3 py-1 text-sm font-medium text-red-800"
+							>
+								❌ Deactivated
+							</span>
+						{/if}
+					</div>
+
+					<!-- Balance -->
+					<div class="text-3xl font-bold">${data.card.balance}</div>
+
+					<!-- Card Number -->
+					<div class="mt-4 font-mono text-lg tracking-widest">{data.card.card_number}</div>
+
+					<!-- Expiry & CVV -->
+					<div class="mt-4 flex justify-between text-sm text-gray-100">
+						<div>
+							<p class="text-xs">EXPIRES</p>
+							<p class="text-white">12/24</p>
 						</div>
-						<div class="mt-6 font-mono text-lg tracking-widest">{data.card.card_number}</div>
-						<div class="mt-4 flex justify-between text-sm">
-							<div>
-								<p class="text-xs">EXPIRES</p>
-								<p>12/24</p>
-							</div>
-							<div>
-								<p class="text-xs">CVV</p>
-								<p>***</p>
-							</div>
-						</div>
-						<div class="mt-6">
-							<p class="text-xs">Cardholder</p>
-							<p class="text-sm font-medium">{data.user.Name}</p>
+						<div>
+							<p class="text-xs">CVV</p>
+							<p class="text-white">***</p>
 						</div>
 					</div>
-					<div class="pt-4">
+
+					<!-- Cardholder -->
+					<div class="mt-6 text-sm">
+						<p class="text-gray-200">Cardholder</p>
+						<p class="font-medium">{data.user.Name}</p>
+					</div>
+
+					<!-- Button -->
+					<div class="w-full pt-4 md:flex md:justify-end">
 						<button
-							class="w-full rounded-xl bg-white/10 px-4 py-2 text-sm font-medium text-white hover:bg-white/20"
+							onclick={openCardQRModal}
+							class="w-full rounded-lg bg-white/10 px-6 py-2 text-sm font-medium text-white transition hover:bg-white/20 md:w-auto"
 						>
 							+ New transaction
 						</button>
