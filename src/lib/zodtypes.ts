@@ -31,3 +31,8 @@ export const SeePinSchema = z.object({
 
 export type SeePinSchemaType = z.infer<typeof SeePinSchema>;
 
+
+export const DepositMoney = z.object({
+    money: z.number().int().min(1).max(1000)
+})
+

@@ -37,6 +37,7 @@
 			showError('Error on the side of the Server');
 		} else {
 			showSucess('Edit was sucesfull');
+			window.location.reload();
 		}
 	}
 
