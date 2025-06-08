@@ -2,6 +2,7 @@
 	import { browser } from '$app/environment';
 	import { goto } from '$app/navigation';
 	import { showError, showSucess } from '$lib/alerts';
+	import type { TransactionPaymentType } from '$lib/zodtypes';
 
 	// Add funds to your account Function Code
 
@@ -59,6 +60,82 @@
 	];
 
 	const categories = ['Friend', 'Food', 'Sports', 'Other'];
+
+	// this function is triggered everytime, user types something!
+	// The event is of type Event, which represents the browser event triggered by the input.
+	// event.target is the HTML element that triggered the event – in this case, your input box.
+
+	function formatCardNumber(event: Event) {
+		const input = event.target as HTMLInputElement;
+
+		// Remove all non-digit characters
+		let rawValue = input.value.replace(/\D/g, '');
+
+		// Insert a space every 4 digits
+		rawValue = rawValue.replace(/(.{4})/g, '$1 ').trim();
+
+		if (rawValue.length > 20) {
+			rawValue = rawValue.slice(0, 20);
+		}
+
+		cardNumber = rawValue;
+	}
+
+	async function SendTransaction() {
+		// must clean the spaces and then check if its atleast 16 characters long!
+		const cleanedCardNumber = cardNumber.replace(/\s+/g, '');
+		if (cleanedCardNumber.length !== 16) {
+			showError('card number must be 16 characters long!');
+			return;
+		}
+
+		if (username.length < 1) {
+			showError('Name must be atleast 1 character long!');
+			return;
+		}
+
+		if (pin.length !== 4) {
+			showError('Pin must be 4 characters long!');
+			return;
+		}
+		const NumberAmount = Number(amount);
+		if (NumberAmount < 1) {
+			showError('Amount must be atleast 1$');
+			return;
+		}
+
+		if (selectedCategories.length !== 1) {
+			showError('You must select 1 category!');
+			return;
+		}
+
+		if (description.trim().length < 1) {
+			showError('You must write atleast 1 character!');
+			return;
+		}
+
+		const getPaymentData: TransactionPaymentType = {
+			card_number: cardNumber.replace(/\s+/g, ''), // doesnt work .trim() so must use this.
+			username: username,
+			pin: pin,
+			amount: Number(amount),
+			message: description,
+			category: selectedCategories
+		};
+
+		console.log(`Payment: ${JSON.stringify(getPaymentData)}`);
+		const response = await fetch('/api/Transactions', {
+			method: 'POST',
+			body: JSON.stringify(getPaymentData),
+			headers: {
+				'content-type': 'application/json'
+			}
+		});
+
+		if (response.ok) {
+			console.log('Working like it should!');
+		}
+	}
 
 	function openCardQRModal() {
 		showCardQRModal = true;
@@ -958,6 +1035,7 @@
 						<input
 							type="text"
 							required
+							oninput={formatCardNumber}
 							bind:value={cardNumber}
 							placeholder="1234 5678 9012 3456"
 							class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:outline-none"
@@ -1070,6 +1148,7 @@
 					>Cancel</button
 				>
 				<button
+					onclick={SendTransaction}
 					type="submit"
 					disabled={!selectedMethod}
 					class="rounded-lg bg-blue-600 px-5 py-2 text-sm text-white hover:bg-blue-700 disabled:opacity-40"

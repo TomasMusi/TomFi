@@ -37,10 +37,6 @@ export const POST: RequestHandler = async ({ request }) => {
     const { token } = result.data;
     const decoded = verifyJWT(token);
 
-
-
-    console.log(`DepositedMoneyData ${data.money} my id ${decoded.id}`);
-
     // Current money
 
     const CurrentMoneyVal = await db.selectFrom("Credit_card").select("balance").where("user_id", "=", decoded.id).executeTakeFirst();
@@ -50,7 +46,7 @@ export const POST: RequestHandler = async ({ request }) => {
 
     const updatedBalance = CurrentMoneyValNum + data.money
 
-    const updatedBalanceDB = await db.updateTable("Credit_card").set({ balance: updatedBalance }).where("user_id", "=", decoded.id).execute();
+    await db.updateTable("Credit_card").set({ balance: updatedBalance }).where("user_id", "=", decoded.id).execute();
 
 
     // Sucess Response.
