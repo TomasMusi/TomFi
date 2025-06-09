@@ -115,7 +115,7 @@
 		}
 
 		const getPaymentData: TransactionPaymentType = {
-			card_number: cardNumber.replace(/\s+/g, ''), // doesnt work .trim() so must use this.
+			card_number: cardNumber, // doesnt work .trim() so must use this.
 			username: username,
 			pin: pin,
 			amount: Number(amount),

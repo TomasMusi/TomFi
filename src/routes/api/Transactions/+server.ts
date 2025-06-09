@@ -3,6 +3,9 @@ import type { RequestHandler } from "@sveltejs/kit";
 import { db } from "../../../types/db";
 import { parse } from 'cookie';
 import { verifyJWT } from "../../../server/auth";
+import * as fs from 'fs'
+import path from "path";
+import { privateDecrypt } from 'crypto';
 
 export const POST: RequestHandler = async ({ request }) => {
     const cookieHeader = request.headers.get('cookie') || '';
@@ -20,7 +23,6 @@ export const POST: RequestHandler = async ({ request }) => {
         );
     }
 
-
     // saving result data into variable token
     const data = await request.json();
 
@@ -33,28 +35,35 @@ export const POST: RequestHandler = async ({ request }) => {
         );
     }
 
-
     const { username, card_number, category, amount, pin, message }: TransactionPaymentType = transactionDataResult.data;
 
-
-    console.log(`Tohle jest data na straně serveru:
-       Jmeno: ${username}
-       Karta: ${card_number}
-       Category: ${category}
-       Amount: ${amount}
-       Pin ${pin}
-       Message ${message}  `);
-
-    // Password
     const { token } = result.data;
     const decoded = verifyJWT(token);
 
-    const verifyPin = await db.selectFrom("Credit_card").select("pin_hash").where("user_id", "=", decoded.id).execute();
+    // verifying user pin.
+    const verifyPin = await db.selectFrom("Credit_card").select("pin_hash").where("user_id", "=", decoded.id).executeTakeFirst();
 
-    console.log(`verifyPIN ${verifyPin}`);
+    if (!verifyPin) {
+        return new Response(JSON.stringify({ error: 'Couldnt find a pin!' }), {
+            status: 400,
+            headers: { 'Content-Type': 'application/json' }
+        });
+    }
+
+    const privateKey = fs.readFileSync(path.resolve("keys/private.pem"), 'utf-8');
+    const decrypted = privateDecrypt(privateKey, Buffer.from(verifyPin?.pin_hash, 'base64'));
+    const decryptedString = decrypted.toString();
+
+    if (pin !== decryptedString) {
+        return new Response(JSON.stringify({ error: 'Error Doesnt match!' }), {
+            status: 400,
+            headers: { 'Content-Type': 'application/json' }
+        });
+    }
+
     const TryDB = await db.selectFrom("Credit_card").select("user_id").where("card_number", "=", card_number).executeTakeFirst();
 
-    console.log(`Try db ${TryDB?.user_id}`);
+    console.log(`Try db ${JSON.stringify(TryDB?.user_id)}`);
 
 
     // Sucess Response.

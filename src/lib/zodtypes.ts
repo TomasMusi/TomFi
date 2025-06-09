@@ -40,7 +40,7 @@ export const DepositMoney = z.object({
 
 
 export const TransactionPayment = z.object({
-    card_number: z.string().length(16),
+    card_number: z.string().length(19),
     username: z.string().min(1),
     pin: z.string().length(4),
     amount: z.number().min(1),
