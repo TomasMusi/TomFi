@@ -19,6 +19,19 @@ export interface CreditCard {
   user_id: number;
 }
 
+export interface Transactions {
+  amount: string;
+  category: string;
+  description: string;
+  direction: "in" | "out";
+  id: Generated<number>;
+  receiver_account: string;
+  receiver_user_id: Generated<number | null>;
+  reciever_name: string;
+  sender_account_id: number;
+  timestamp: Date;
+}
+
 export interface Users {
   created_at: Date;
   email: string;
@@ -33,5 +46,6 @@ export interface Users {
 
 export interface DB {
   Credit_card: CreditCard;
+  Transactions: Transactions;
   Users: Users;
 }

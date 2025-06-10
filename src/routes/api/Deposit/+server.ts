@@ -45,8 +45,20 @@ export const POST: RequestHandler = async ({ request }) => {
     const CurrentMoneyValNum = Number(CurrentMoneyVal?.balance)
 
     const updatedBalance = CurrentMoneyValNum + data.money
-
+    const DataMoneyStr = data.money.toString();
     await db.updateTable("Credit_card").set({ balance: updatedBalance }).where("user_id", "=", decoded.id).execute();
+
+    await db.insertInto("Transactions").values({
+        sender_account_id: decoded.id, // sender's user ID
+        receiver_account: "1111", // receiver's card number
+        receiver_user_id: null, // We don't have this.
+        description: "deposit",
+        reciever_name: "deposit",
+        category: "other", // if category is an array, pick first one
+        amount: DataMoneyStr,
+        direction: "in",
+        timestamp: new Date(), // or leave blank if the DB sets it automatically
+    }).execute();
 
 
     // Sucess Response.

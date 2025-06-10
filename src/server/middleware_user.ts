@@ -42,13 +42,26 @@ export async function middlewareAuth(request: Request) {
             .where('user_id', '=', decoded.id)
             .executeTakeFirst();
 
+        const transactions = await db
+            .selectFrom('Transactions')
+            .selectAll()
+            .where((eb) =>
+                eb.or([
+                    eb('sender_account_id', '=', decoded.id),
+                    eb('receiver_user_id', '=', decoded.id)
+                ])
+            )
+            .orderBy('timestamp', 'desc')
+            .execute();
+
         if (!user) {
             throw redirect(302, "/");
         }
         return {
             decoded,
             user,
-            card
+            card,
+            transactions
         };
     } catch (err) {
         throw redirect(302, '/');

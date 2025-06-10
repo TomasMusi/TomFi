@@ -2,6 +2,19 @@
 	import { browser } from '$app/environment';
 	import { goto } from '$app/navigation';
 
+	type Transaction = {
+		id: number;
+		amount: string;
+		category: string;
+		description: string;
+		direction: 'in' | 'out';
+		receiver_account: string;
+		receiver_user_id: number | null;
+		reciever_name: string;
+		sender_account_id: number;
+		timestamp: string | Date;
+	};
+
 	export let data: {
 		user: {
 			id: number;
@@ -16,6 +29,7 @@
 			pin_hash: string;
 			is_active: number;
 		};
+		transactions: Transaction[];
 	};
 
 	let isOpen = false;
@@ -164,73 +178,26 @@
 								<th class="px-6 py-3 text-left text-sm font-medium">Amount</th>
 							</tr>
 						</thead>
+
 						<tbody class="divide-y divide-gray-200 text-sm text-gray-700">
-							<tr>
-								<td class="px-6 py-4 whitespace-nowrap">May 28, 2025</td>
-								<td class="px-6 py-4 whitespace-nowrap">Uber Eats</td>
-								<td class="px-6 py-4 whitespace-nowrap">Food</td>
-								<td class="px-6 py-4 whitespace-nowrap text-red-500">-$23.10</td>
-							</tr>
-							<tr>
-								<td class="px-6 py-4 whitespace-nowrap">May 26, 2025</td>
-								<td class="px-6 py-4 whitespace-nowrap">Gym Membership</td>
-								<td class="px-6 py-4 whitespace-nowrap">Health</td>
-								<td class="px-6 py-4 whitespace-nowrap text-red-500">-$150.00</td>
-							</tr>
-							<tr>
-								<td class="px-6 py-4 whitespace-nowrap">May 25, 2025</td>
-								<td class="px-6 py-4 whitespace-nowrap">Salary</td>
-								<td class="px-6 py-4 whitespace-nowrap">Income</td>
-								<td class="px-6 py-4 whitespace-nowrap text-green-500">+$5,000.00</td>
-							</tr>
-							<tr>
-								<td class="px-6 py-4 whitespace-nowrap">May 25, 2025</td>
-								<td class="px-6 py-4 whitespace-nowrap">Salary</td>
-								<td class="px-6 py-4 whitespace-nowrap">Income</td>
-								<td class="px-6 py-4 whitespace-nowrap text-green-500">+$5,000.00</td>
-							</tr>
-							<tr>
-								<td class="px-6 py-4 whitespace-nowrap">May 25, 2025</td>
-								<td class="px-6 py-4 whitespace-nowrap">Salary</td>
-								<td class="px-6 py-4 whitespace-nowrap">Income</td>
-								<td class="px-6 py-4 whitespace-nowrap text-green-500">+$5,000.00</td>
-							</tr>
-							<tr>
-								<td class="px-6 py-4 whitespace-nowrap">May 25, 2025</td>
-								<td class="px-6 py-4 whitespace-nowrap">Salary</td>
-								<td class="px-6 py-4 whitespace-nowrap">Income</td>
-								<td class="px-6 py-4 whitespace-nowrap text-green-500">+$5,000.00</td>
-							</tr>
-							<tr>
-								<td class="px-6 py-4 whitespace-nowrap">May 25, 2025</td>
-								<td class="px-6 py-4 whitespace-nowrap">Salary</td>
-								<td class="px-6 py-4 whitespace-nowrap">Income</td>
-								<td class="px-6 py-4 whitespace-nowrap text-green-500">+$5,000.00</td>
-							</tr>
-							<tr>
-								<td class="px-6 py-4 whitespace-nowrap">May 25, 2025</td>
-								<td class="px-6 py-4 whitespace-nowrap">Salary</td>
-								<td class="px-6 py-4 whitespace-nowrap">Income</td>
-								<td class="px-6 py-4 whitespace-nowrap text-green-500">+$5,000.00</td>
-							</tr>
-							<tr>
-								<td class="px-6 py-4 whitespace-nowrap">May 25, 2025</td>
-								<td class="px-6 py-4 whitespace-nowrap">Salary</td>
-								<td class="px-6 py-4 whitespace-nowrap">Income</td>
-								<td class="px-6 py-4 whitespace-nowrap text-green-500">+$5,000.00</td>
-							</tr>
-							<tr>
-								<td class="px-6 py-4 whitespace-nowrap">May 25, 2025</td>
-								<td class="px-6 py-4 whitespace-nowrap">Salary</td>
-								<td class="px-6 py-4 whitespace-nowrap">Income</td>
-								<td class="px-6 py-4 whitespace-nowrap text-green-500">+$5,000.00</td>
-							</tr>
-							<tr>
-								<td class="px-6 py-4 whitespace-nowrap">May 25, 2025</td>
-								<td class="px-6 py-4 whitespace-nowrap">Salary</td>
-								<td class="px-6 py-4 whitespace-nowrap">Income</td>
-								<td class="px-6 py-4 whitespace-nowrap text-green-500">+$5,000.00</td>
-							</tr>
+							{#each data.transactions.slice(0, 10) as tx}
+								<tr>
+									<td class="px-6 py-4 whitespace-nowrap">
+										{new Date(tx.timestamp).toLocaleDateString('en-US', {
+											year: 'numeric',
+											month: 'long',
+											day: 'numeric'
+										})}
+									</td>
+									<td class="px-6 py-4 whitespace-nowrap">{tx.description}</td>
+									<td class="px-6 py-4 whitespace-nowrap">{tx.category}</td>
+									<td
+										class={`px-6 py-4 whitespace-nowrap ${tx.direction === 'out' ? 'text-red-500' : 'text-green-500'}`}
+									>
+										{tx.direction === 'out' ? '-' : '+'}${parseFloat(tx.amount).toFixed(2)}
+									</td>
+								</tr>
+							{/each}
 						</tbody>
 					</table>
 				</div>

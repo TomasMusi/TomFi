@@ -2,6 +2,19 @@
 	import { browser } from '$app/environment';
 	import { goto } from '$app/navigation';
 
+	type Transaction = {
+		id: number;
+		amount: string;
+		category: string;
+		description: string;
+		direction: 'in' | 'out';
+		receiver_account: string;
+		receiver_user_id: number | null;
+		reciever_name: string;
+		sender_account_id: number;
+		timestamp: string | Date;
+	};
+
 	export let data: {
 		user: {
 			id: number;
@@ -16,6 +29,7 @@
 			pin_hash: string;
 			is_active: number;
 		};
+		transactions: Transaction[];
 	};
 
 	const isActive = data.card.is_active === 1;
@@ -162,13 +176,21 @@
 				<div class="rounded-xl bg-white p-6 shadow-md">
 					<p class="mb-4 font-semibold text-gray-700">Transactions</p>
 					<ul class="space-y-2 text-sm text-gray-600">
-						<li class="flex justify-between">Uber Eats <span>-$23.10</span></li>
-						<li class="flex justify-between">Gym Membership <span>-$150.00</span></li>
-						<li class="flex justify-between">
-							Salary <span class="text-green-500">+$5000.00</span>
-						</li>
+						{#if data.transactions}
+							{#each data.transactions.slice(0, 3) as tx}
+								<li class="flex justify-between">
+									{tx.description}
+									<span class={tx.direction === 'out' ? 'text-red-500' : 'text-green-500'}>
+										{tx.direction === 'out' ? '-' : '+'}${parseFloat(tx.amount).toFixed(2)}
+									</span>
+								</li>
+							{/each}
+						{:else}
+							<li class="text-gray-400 italic">No transactions available</li>
+						{/if}
 					</ul>
 				</div>
+
 				<div
 					class="relative mx-auto w-full max-w-7xl space-y-4 rounded-2xl bg-gradient-to-tr from-indigo-500 to-blue-500 p-6 text-white shadow-lg"
 				>
