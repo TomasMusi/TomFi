@@ -31,7 +31,7 @@ Throughout this project, I've explored:
 | 📷 **Custom Profile Picture** | Upload your own avatar |
 | 📱 **QR Code Payments** | Instantly generate a QR code for card-based payments |
 | 🛡 **In Progress**: 2FA | Coming soon: Two-Factor Authentication |
-| 💸 **In Progress**: Send Money | Support for account-to-account transfers |
+| 💸 **Transaction System**: Send Money | Support for account-to-account transfers |
 | 📊 **In Progress**: Charts & Analytics | Visualize your financial behavior |
 | 🖥 **In Progress**: Desktop App | A dedicated Electron desktop version |
 
@@ -76,7 +76,7 @@ This project taught me a lot about:
 - [x] Custom avatars
 - [x] QR code support
 - [ ] 2FA Authentication
-- [ ] Transaction history
+- [x] Transaction history
 - [ ] Desktop App (C++)
 - [ ] Charts
 
