@@ -37,7 +37,8 @@ Throughout this project, I've explored:
 
 ---
 
-![Screenshot from 2025-06-03 17-16-58](https://github.com/user-attachments/assets/f02b7a88-80ef-4153-92d3-156806c3e5a0)
+![Screenshot from 2025-06-11 14-38-22](https://github.com/user-attachments/assets/54a85630-b179-4e78-84c0-a83aada9f95e)
+
 
 ## 🧪 Tech Stack
 
@@ -56,9 +57,10 @@ Throughout this project, I've explored:
 
 ---
 
-![Screenshot from 2025-06-03 17-16-21](https://github.com/user-attachments/assets/bbef87e0-4f0f-4a33-8c47-212b1ed2908c)
+![Screenshot from 2025-06-11 14-38-15](https://github.com/user-attachments/assets/21d92437-5498-4c6e-b070-7142e96aed10)
 
 ## 📚 What I Learned
+
 
 This project taught me a lot about:
 
