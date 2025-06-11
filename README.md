@@ -91,3 +91,8 @@ git clone https://github.com/your-username/tomfi.git
 cd tomfi
 npm install
 npm run dev
+```
+
+
+![clideo_editor_f04e3bf4fe1345e1993ac7d0b6ad5d82](https://github.com/user-attachments/assets/9fd70a02-ac98-4061-b5ac-483c3df92730)
+
