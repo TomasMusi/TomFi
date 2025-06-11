@@ -1,6 +1,9 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
 	import { goto } from '$app/navigation';
+	import Chart, { Legend } from 'chart.js/auto';
+	import { onMount, onDestroy } from 'svelte';
+	//
 
 	type Transaction = {
 		id: number;
@@ -32,6 +35,71 @@
 		transactions: Transaction[];
 	};
 
+	// Chart.JS
+
+	let friend = 0;
+	let food = 0;
+	let sports = 0;
+	let other = 0;
+
+	for (const trx of data.transactions) {
+		switch (trx.category) {
+			case 'Friend':
+				friend++;
+				break;
+			case 'Food':
+				food++;
+				break;
+			case 'Sports':
+				sports++;
+				break;
+			default:
+				other++;
+				break;
+		}
+	}
+
+	onMount(() => {
+		const chartData = {
+			labels: ['Friend', 'Food', 'Sports', 'Other'],
+			datasets: [
+				{
+					label: 'Transaction Distribution',
+					data: [friend, food, sports, other],
+					backgroundColor: [
+						'#4F46E5', // Friend – deep indigo (matches your dashboard button)
+						'#FBBF24', // Food – warm amber (friendly contrast)
+						'#34D399', // Sports – teal green (energetic but soft)
+						'#A78BFA' // Other – soft purple (neutral and blends well)
+					],
+					borderColor: '#fff',
+					borderWidth: 1
+				}
+			]
+		};
+
+		const ctx = document.getElementById('acquisitions');
+		if (ctx) {
+			new Chart(ctx, {
+				type: 'pie',
+				data: chartData,
+				options: {
+					responsive: true,
+					maintainAspectRatio: true,
+					plugins: {
+						legend: {
+							display: false // ❌ Hides legend
+						},
+						tooltip: {
+							enabled: true // ✅ Keeps hover tooltip
+						}
+					}
+				}
+			});
+		}
+	});
+
+	//
 	const isActive = data.card.is_active === 1;
 
 	let isOpen = false;
@@ -53,8 +121,6 @@
 	function closeDropdown() {
 		isOpen = false;
 	}
-
-	import { onMount, onDestroy } from 'svelte';
 
 	onMount(() => {
 		if (browser) {
@@ -171,7 +237,13 @@
 			<div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
 				<div class="rounded-xl bg-white p-6 shadow-md">
 					<p class="mb-4 font-semibold text-gray-700">Expenses by category</p>
-					<div class="flex h-48 items-center justify-center rounded-lg bg-gray-100">[ Chart ]</div>
+					<div class="flex h-48 items-center justify-center rounded-lg bg-gray-100">
+						{#if data.transactions.length > 0}
+							<canvas id="acquisitions"></canvas>
+						{:else}
+							<p class="text-sm text-gray-500 italic">Don't have enough data!</p>
+						{/if}
+					</div>
 				</div>
 				<div class="rounded-xl bg-white p-6 shadow-md">
 					<p class="mb-4 font-semibold text-gray-700">Transactions</p>
@@ -179,7 +251,9 @@
 						{#if data.transactions}
 							{#each data.transactions.slice(0, 3) as tx}
 								<li class="flex justify-between">
-									{tx.description}
+									{tx.description.length > 25
+										? `${tx.description.slice(0, 25)}...`
+										: tx.description}
 									<span class={tx.direction === 'out' ? 'text-red-500' : 'text-green-500'}>
 										{tx.direction === 'out' ? '-' : '+'}${parseFloat(tx.amount).toFixed(2)}
 									</span>
