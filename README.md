@@ -57,7 +57,7 @@ Throughout this project, I've explored:
 
 ---
 
-![Screenshot from 2025-06-11 14-38-15](https://github.com/user-attachments/assets/21d92437-5498-4c6e-b070-7142e96aed10)
+![Screenshot from 2025-06-12 14-40-58](https://github.com/user-attachments/assets/317025ea-7a6e-4002-87e7-4bc424f17a2a)
 
 ## 📚 What I Learned
 
