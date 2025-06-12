@@ -418,7 +418,7 @@
 				{#if data.transactions.length > 0}
 					<div class="relative w-full overflow-x-auto">
 						<div class="relative mx-auto w-full max-w-3xl">
-							<canvas id="sorted"></canvas>
+							<canvas class="h-auto w-full" id="sorted"></canvas>
 						</div>
 					</div>
 				{:else}

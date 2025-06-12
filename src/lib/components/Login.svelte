@@ -27,11 +27,17 @@
 				'content-type': 'application/json'
 			}
 		});
+		const result = await reponse.json();
 
 		if (!reponse.ok) {
-			showError('Error! couldnt find a account! ');
+			showError('Error logging in.');
+			return;
+		}
+
+		if (result.requires2FA) {
+			goto(`/2fa?userId=${result.userId}`);
 		} else {
-			showSucess('Login was sucessfull!');
+			showSucess('Login successful!');
 			goto('/dashboard');
 		}
 	}

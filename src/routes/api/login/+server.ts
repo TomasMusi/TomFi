@@ -39,21 +39,29 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
         });
     }
 
-    // Creating token Calling a signJWT Function
-    const token: string = signJWT({ id: user[0].id, email: email });
 
-    cookies.set('token', token, {
-        path: "/",
-        httpOnly: true,
-        secure: true,
-        maxAge: 60 * 60 * 24 * 7
+    if (user[0].is_2fa_enabled) {
+        return new Response(JSON.stringify({
+            requires2FA: true,
+            userId: user[0].id
+        }), {
+            status: 200,
+            headers: { 'Content-Type': 'application/json' }
+        });
+    } else {
+        const token: string = signJWT({ id: user[0].id, email: email });
 
-    })
+        cookies.set('token', token, {
+            path: "/",
+            httpOnly: true,
+            secure: true,
+            maxAge: 60 * 60 * 24 * 7
+        });
 
-    return new Response(JSON.stringify({ success: true }), {
-        status: 200,
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    });
+        return new Response(JSON.stringify({ success: true }), {
+            status: 200,
+            headers: { 'Content-Type': 'application/json' }
+        });
+    }
 }
+

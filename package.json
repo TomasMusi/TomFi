@@ -53,6 +53,7 @@
 		"mysql2": "^3.14.1",
 		"qrcode": "^1.5.4",
 		"skia-canvas": "^2.0.2",
+		"speakeasy": "^2.0.0",
 		"sweetalert2": "^11.21.2",
 		"ts-node": "^10.9.2",
 		"zod": "^3.25.28"
