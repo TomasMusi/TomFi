@@ -77,10 +77,10 @@ This project taught me a lot about:
 - [x] Create and manage cards
 - [x] Custom avatars
 - [x] QR code support
-- [ ] 2FA Authentication
+- [x] 2FA Authentication
 - [x] Transaction history
 - [ ] Desktop App (C++)
-- [ ] Charts
+- [x] Charts
 
 ---
 
