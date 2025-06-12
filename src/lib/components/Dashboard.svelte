@@ -35,6 +35,96 @@
 		transactions: Transaction[];
 	};
 
+	// Chart.JS money in | Money out
+
+	// Group data for chart
+	let labels: string[] = [];
+	let moneyIn: number[] = [];
+	let moneyOut: number[] = [];
+
+	onMount(() => {
+		const dailyMap = new Map<string, { in: number; out: number }>();
+
+		for (const trx of data.transactions) {
+			const date = new Date(trx.timestamp).toLocaleDateString('en-US', {
+				month: 'short',
+				day: 'numeric'
+			});
+
+			const entry = dailyMap.get(date) || { in: 0, out: 0 };
+			const amount = parseFloat(trx.amount);
+
+			if (trx.direction === 'in') {
+				entry.in += amount;
+			} else {
+				entry.out += amount;
+			}
+
+			dailyMap.set(date, entry);
+		}
+
+		// Sort dates descending and take only the latest 4
+		const sortedDates = Array.from(dailyMap.keys())
+			.sort((a, b) => {
+				// Convert strings back to real dates for sorting
+				return new Date(b).getTime() - new Date(a).getTime();
+			})
+			.slice(0, 4)
+			.reverse(); // reverse to show in chronological order
+
+		labels = sortedDates;
+		moneyIn = sortedDates.map((date) => dailyMap.get(date)?.in || 0);
+		moneyOut = sortedDates.map((date) => dailyMap.get(date)?.out || 0);
+
+		const ctx = document.getElementById('sorted') as HTMLCanvasElement;
+
+		if (ctx) {
+			new Chart(ctx, {
+				type: 'bar',
+				data: {
+					labels,
+					datasets: [
+						{
+							label: 'Money In',
+							data: moneyIn,
+							backgroundColor: '#14b8a6' // teal
+						},
+						{
+							label: 'Money Out',
+							data: moneyOut,
+							backgroundColor: '#f97316' // orange
+						}
+					]
+				},
+				options: {
+					responsive: true,
+					scales: {
+						y: {
+							beginAtZero: true,
+							title: { display: true, text: 'Amount' }
+						},
+						x: {
+							title: { display: true, text: 'Date' }
+						}
+					},
+					plugins: {
+						legend: {
+							display: true,
+							position: 'top'
+						},
+						tooltip: {
+							enabled: true
+						},
+						title: {
+							display: false,
+							text: 'Money In vs Money Out'
+						}
+					}
+				}
+			});
+		}
+	});
+
 	// Chart.JS
 
 	let friend = 0;
@@ -188,7 +278,7 @@
 		<main class="flex-1 space-y-6 overflow-y-auto bg-gray-50 p-6 sm:p-10">
 			<!-- Header -->
 			<div class="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
-				<h1 class="text-2xl font-bold text-gray-800">Welcome to {data.user.Name}</h1>
+				<h1 class="text-2xl font-bold text-gray-800">Welcome {data.user.Name}!</h1>
 				<div class="flex items-center gap-4">
 					<input
 						type="text"
@@ -324,11 +414,18 @@
 			<!-- Analytics Section -->
 			<div class="rounded-xl bg-white p-6 shadow-md">
 				<h2 class="mb-4 text-lg font-bold text-gray-800">Analytics</h2>
-				<div
-					class="flex h-48 items-center justify-center rounded-lg bg-gradient-to-b from-blue-100 to-white"
-				>
-					[ Chart Placeholder ]
-				</div>
+
+				{#if data.transactions.length > 0}
+					<div class="relative w-full overflow-x-auto">
+						<div class="relative mx-auto w-full max-w-3xl">
+							<canvas id="sorted"></canvas>
+						</div>
+					</div>
+				{:else}
+					<p class="text-center text-sm text-gray-500 italic">
+						Not enough transaction data to generate chart.
+					</p>
+				{/if}
 			</div>
 		</main>
 	</div>
