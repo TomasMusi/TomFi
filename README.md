@@ -84,6 +84,112 @@ This project taught me a lot about:
 
 ---
 
+## 📁 Directory Structure
+
+```
+TomFi-Web/
+├── src/
+│   ├── app.css
+│   ├── app.d.ts
+│   ├── app.html
+│   ├── lib/
+│   │   ├── alerts.ts
+│   │   ├── index.ts
+│   │   ├── zodtypes.ts
+│   │   └── components/
+│   │       ├── App.svelte
+│   │       ├── Benefits.svelte
+│   │       ├── Dashboard.svelte
+│   │       ├── Footer.svelte
+│   │       ├── Hero.svelte
+│   │       ├── Login.svelte
+│   │       ├── Mail.svelte
+│   │       ├── Navbar.svelte
+│   │       ├── Profile.svelte
+│   │       ├── Register.svelte
+│   │       ├── Testimony.svelte
+│   │       ├── Transactions.svelte
+│   │       └── Wallet.svelte
+│   ├── routes/
+│   │   ├── +error.svelte
+│   │   ├── +layout.svelte
+│   │   ├── +page.server.ts
+│   │   ├── +page.svelte
+│   │   ├── 2fa/
+│   │   │   └── +page.svelte
+│   │   ├── admin/
+│   │   │   ├── +page.server.ts
+│   │   │   └── +page.svelte
+│   │   ├── login/
+│   │   │   └── +page.svelte
+│   │   ├── register/
+│   │   │   └── +page.svelte
+│   │   ├── tst/
+│   │   │   └── +page.svelte
+│   │   ├── dashboard/
+│   │   │   ├── +page.server.ts
+│   │   │   ├── +page.svelte
+│   │   │   ├── mail/
+│   │   │   │   ├── +page.server.ts
+│   │   │   │   └── +page.svelte
+│   │   │   ├── profile/
+│   │   │   │   ├── +page.server.ts
+│   │   │   │   └── +page.svelte
+│   │   │   ├── transactions/
+│   │   │   │   ├── +page.server.ts
+│   │   │   │   └── +page.svelte
+│   │   │   └── Wallet/
+│   │   │       ├── +page.server.ts
+│   │   │       └── +page.svelte
+│   │   └── api/
+│   │       ├── 2fa/
+│   │       │   └── +server.ts
+│   │       ├── Deposit/
+│   │       │   └── +server.ts
+│   │       ├── login/
+│   │       │   └── +server.ts
+│   │       ├── login-2fa-verify/
+│   │       │   └── +server.ts
+│   │       ├── logout/
+│   │       │   └── +server.ts
+│   │       ├── qrcode/
+│   │       │   └── +server.ts
+│   │       ├── register/
+│   │       │   └── +server.ts
+│   │       ├── SeePin/
+│   │       │   └── +server.ts
+│   │       ├── SendData/
+│   │       │   └── +server.ts
+│   │       ├── setCardStatus/
+│   │       │   └── +server.ts
+│   │       ├── Transactions/
+│   │       │   └── +server.ts
+│   │       └── verify_2fa/
+│   │           └── +server.ts
+│   ├── server/
+│   │   ├── auth.ts
+│   │   ├── middleware_admin.ts
+│   │   └── middleware_user.ts
+│   └── types/
+│       ├── database.ts
+│       └── db.ts
+├── .svelte-kit/
+├── keys/
+│   ├── private.pem
+│   └── public.pem
+├── licence.md
+├── package.json
+├── package-lock.json
+├── static/
+│   ├── card.png
+│   ├── favicon.png
+│   ├── pfp/
+│   │   └── PokeSearch1-2025-06-08_10-04.png
+│   └── qrcode.png
+```
+
+
+---
 ## 🛠️ Running Locally
 
 ```bash
