@@ -79,7 +79,7 @@ This project taught me a lot about:
 - [x] QR code support
 - [x] 2FA Authentication
 - [x] Transaction history
-- [ ] Desktop App (C++)
+- [X] Desktop App (C++)
 - [x] Charts
 
 ---
