@@ -30,10 +30,10 @@ Throughout this project, I've explored:
 | 🔐 **PIN Check** | Secure PIN validation for card operations |
 | 📷 **Custom Profile Picture** | Upload your own avatar |
 | 📱 **QR Code Payments** | Instantly generate a QR code for card-based payments |
-| 🛡 **In Progress**: 2FA | Coming soon: Two-Factor Authentication |
+| 🛡 **2FA** | Coming soon: Two-Factor Authentication |
 | 💸 **Transaction System**: Send Money | Support for account-to-account transfers |
-| 📊 **In Progress**: Charts & Analytics | Visualize your financial behavior |
-| 🖥 **In Progress**: Desktop App | A dedicated Electron desktop version |
+| 📊 **Charts & Analytics** | Visualize your financial behavior |
+| 🖥 **Desktop App** | A dedicated Electron desktop version |
 
 ---
 
@@ -77,10 +77,10 @@ This project taught me a lot about:
 - [x] Create and manage cards
 - [x] Custom avatars
 - [x] QR code support
-- [ ] 2FA Authentication
+- [X] 2FA Authentication
 - [x] Transaction history
-- [ ] Desktop App (C++)
-- [ ] Charts
+- [X] Desktop App (C++)
+- [X] Charts
 
 ---
 
