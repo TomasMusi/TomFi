@@ -24,16 +24,17 @@ Throughout this project, I've explored:
 
 ## ✨ Features
 
-| Feature | Description |
-|--------|-------------|
-| 💳 **Create Credit Cards**: Users can generate and manage virtual credit cards |
-| 🔐 **PIN Check**: Secure PIN validation for card operations |
-| 📷 **Custom Profile Picture**: Upload your own avatar |
-| 📱 **QR Code Payments**: Instantly generate a QR code for card-based payments |
-| 🛡 **2FA**: Two-Factor Authentication |
-| 💸 **Transaction System**: Send Money | Support for account-to-account transfers |
-| 📊 **Charts & Analytics**: Visualize your financial behavior |
-| 🖥 **In Progress**: Desktop App | A dedicated Electron desktop version |
+| Feature                      | Description                                                                 |
+|-----------------------------|-----------------------------------------------------------------------------|
+| 💳 **Create Credit Cards**    | Users can generate and manage virtual credit cards                         |
+| 🔐 **PIN Check**              | Secure PIN validation for card operations                                  |
+| 📷 **Custom Profile Picture** | Upload your own avatar for personalization                                 |
+| 📱 **QR Code Payments**       | Instantly generate QR codes for seamless card-based payments               |
+| 🛡 **2FA**                    | Two-Factor Authentication for enhanced security                            |
+| 💸 **Transaction System**     | Send and receive money through account-to-account transfers                |
+| 📊 **Charts & Analytics**     | Visualize financial behavior with interactive charts and graphs            |
+| 🖥 **Desktop App**            | A dedicated Electron desktop version for native experience and performance |
+
 
 ---
 
