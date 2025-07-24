@@ -54,7 +54,7 @@ Throughout this project, I've explored:
   - Middleware for route guards
   - File handling for user avatars
   - QR code generation
-  - Planned: 2FA & persistent login tokens
+  - 2FA & persistent login tokens
 
 ---
 
